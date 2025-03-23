@@ -2,5 +2,5 @@
 
 ## Description
 
-Add your plugin description here.
+Add custom plugin with your own content in your dashboards.
 

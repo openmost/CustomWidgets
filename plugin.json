@@ -1,29 +1,32 @@
 {
     "name": "CustomWidgets",
-    "description": "Add custom widgets to your dashboard",
-    "version": "0.1.0",
+    "description": "Add custom text and HTML to your dashboard",
+    "version": "1.0.0",
     "theme": false,
     "require": {
-        "matomo": ">=5.2.0-stable,<6.0.0-b1"
+        "matomo": ">=5.0.0,<6.0.0-b1"
     },
     "authors": [
         {
-            "name": "Matomo",
-            "email": "",
-            "homepage": ""
+            "name": "Openmost",
+            "email": "ronan@openmost.io",
+            "homepage": "https:\/\/openmost.io"
         }
     ],
     "support": {
-        "email": "",
-        "issues": "",
-        "forum": "",
-        "irc": "",
-        "wiki": "",
-        "source": "",
-        "docs": "",
-        "rss": ""
+        "email": "ronan@openmost.io",
+        "issues": "https:\/\/github.com\/openmost\/CustomWidgets\/issues",
+        "source": "https:\/\/github.com\/openmost\/CustomWidgets"
     },
-    "homepage": "",
+    "homepage": "https:\/\/openmost.io\/products\/custom-widgets\/",
     "license": "GPL v3+",
-    "keywords": []
+    "keywords": [
+        "custom",
+        "widgets",
+        "widget",
+        "html",
+        "content",
+        "text"
+    ],
+    "category": "customisation"
 }
