@@ -79,6 +79,6 @@ class GetCustomWidget extends Widget
 
         // or: return $this->renderTemplate('myViewTemplate', array(...view variables...));
 
-        return '<div class="widgetBody">' . $widgetContent . '</div>';
+        return '<div class="widgetBody custom-widget-body">' . $widgetContent . '</div>';
     }
 }

@@ -11,5 +11,16 @@ namespace Piwik\Plugins\CustomWidgets;
 
 class CustomWidgets extends \Piwik\Plugin
 {
-  
+    public function registerEvents()
+    {
+        return array(
+            'AssetManager.getStylesheetFiles' => 'getStylesheetFiles',
+        );
+    }
+
+    public function getStylesheetFiles(&$files)
+    {
+        $files[] = "plugins/CustomWidgets/stylesheets/theme.less";
+    }
+
 }
