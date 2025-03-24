@@ -1,6 +1,10 @@
 ## Changelog
 
 
+### 1.0.3
+
+update: Documentation
+
 ### 1.0.2
 
 update: Iframe, image, svg and canvas with fitting.
