@@ -1,6 +1,10 @@
 ## Changelog
 
 
+### 1.0.4
+
+update: Default widget content link
+
 ### 1.0.3
 
 update: Documentation

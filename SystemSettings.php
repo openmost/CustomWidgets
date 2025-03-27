@@ -47,7 +47,7 @@ class SystemSettings extends \Piwik\Settings\Plugin\SystemSettings
 
     private function createWidgetContentSetting()
     {
-        return $this->makeSetting('widgetContent', $default = '<p>Edit the content of your custom widget in the general settings.</p>', FieldConfig::TYPE_STRING, function (FieldConfig $field) {
+        return $this->makeSetting('widgetContent', $default = '<p>Edit the content of your custom widget in the <a href="/index.php?module=CoreAdminHome&action=generalSettings#/CustomWidgets">general settings</a>.</p>', FieldConfig::TYPE_STRING, function (FieldConfig $field) {
             $field->title = 'Content to display';
             $field->uiControl = FieldConfig::UI_CONTROL_TEXTAREA;
             $field->description = 'You can add text and custom HTML.';
