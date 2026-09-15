@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
     \Piwik\View\SecurityPolicy::class => \Piwik\DI::decorate(function ($previous) {
         /** @var \Piwik\View\SecurityPolicy $previous */
 
@@ -8,10 +8,12 @@ return array(
             return $previous;
         }
 
-        $previous->addPolicy('frame-src', 'www.youtube.com');
-        $previous->addPolicy('frame-src', 'youtube.com');
-        $previous->addPolicy('frame-src', 'www.youtube-nocookie.com');
-        $previous->addPolicy('frame-src', 'youtube-nocookie.com');
+        try {
+            \Piwik\Plugins\CustomWidgets\AllowedDomains::extendSecurityPolicy($previous);
+        } catch (\Throwable $e) {
+            // never break the page when the settings cannot be read (eg. while Matomo is updating)
+        }
+
         return $previous;
     }),
-);
+];

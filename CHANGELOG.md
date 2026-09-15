@@ -1,5 +1,19 @@
 ## Changelog
 
+### 6.0.0
+
+- Compatibility with Matomo 6.x (`>=6.0.0-b1,<7.0.0-b1`)
+- Requires PHP 8.1+ (and MySQL 8.0+ or MariaDB 10.6+, like Matomo 6)
+- Dedicated management page in Administration > System > Custom Widgets (Vue), replacing the general settings section
+- Unlimited widgets: create, edit, reorder and delete as many widgets as needed, each with its own title and content
+- HTML code editor with syntax highlighting (CodeMirror) and live preview of the widget
+- Display a widget on all websites or only on selected websites
+- Allowed external domains to allow iframes, images, videos and audio from other domains in the Content Security Policy (YouTube allowed by default)
+- HTTP API to manage the widgets and the allowed domains (super user)
+- Fix the default content link when Matomo is installed in a sub directory
+- French translation
+- Automatic upgrade: the widget of version 1.x becomes the first widget of the list and stays on the dashboards
+- Update plugin homepage URL and support email
 
 ### 1.0.4
 

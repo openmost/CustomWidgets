@@ -1,3 +1,4 @@
+// Widget content, rendered on the dashboards and in the preview of the management page
 .custom-widget-body {
   overflow: hidden;
   word-break: break-word;
@@ -10,5 +11,170 @@
   svg,
   img {
     max-width: 100%;
+  }
+
+  .custom-widget-unavailable {
+    color: @theme-color-text-lighter;
+    font-style: italic;
+  }
+}
+
+// Management page, Administration > System > Custom Widgets (see vue/src)
+.customWidgetsList {
+  .dataTable {
+    max-width: 1000px;
+  }
+
+  th.index,
+  td.index {
+    width: 80px;
+  }
+
+  th.sites,
+  td.sites {
+    width: 260px;
+  }
+
+  th.action,
+  td.action {
+    width: 190px;
+    white-space: nowrap;
+  }
+
+  td.title a {
+    color: @theme-color-link;
+    font-weight: 500;
+  }
+
+  button.table-action {
+    padding: 0 4px;
+    border: 0;
+    background: none;
+    color: @theme-color-text;
+    font-size: 16px;
+    cursor: pointer;
+
+    &[disabled] {
+      opacity: .3;
+      cursor: default;
+    }
+  }
+
+  a.table-action {
+    color: @theme-color-text;
+  }
+
+  &__allSites {
+    color: @theme-color-text-light;
+  }
+}
+
+.customWidgetsAllowedDomains {
+  &__field {
+    max-width: 600px;
+
+    textarea {
+      min-height: 140px;
+      font-family: monospace;
+    }
+  }
+}
+
+.customWidgetEdit {
+  &__heading {
+    margin: 1.5rem 0 .75rem;
+    color: @theme-color-text;
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  &__help {
+    margin: .5rem 0 0;
+    color: @theme-color-text-lighter;
+    font-size: .8rem;
+  }
+
+  &__workspace {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+
+    @media (max-width: 1100px) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  &__pane {
+    min-width: 0;
+  }
+
+  &__sites p {
+    margin: .25rem 0;
+  }
+
+  &__siteSelection {
+    max-width: 600px;
+    margin: .5rem 0 0 1.75rem;
+  }
+
+  &__siteSearch {
+    margin-bottom: .5rem !important;
+  }
+
+  &__siteList {
+    max-height: 260px;
+    overflow: auto;
+    padding: .25rem .75rem;
+    border: 1px solid @theme-color-border;
+    border-radius: .5rem;
+
+    small {
+      color: @theme-color-text-lighter;
+    }
+  }
+
+  &__buttons {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    margin-top: 2rem;
+  }
+}
+
+.customWidgetsCodeEditor .cm-editor {
+  height: 420px;
+  border-radius: .5rem;
+  overflow: hidden;
+  font-size: .875rem;
+
+  .cm-scroller {
+    font-family: monospace;
+  }
+
+  &.cm-focused {
+    outline: 2px solid @theme-color-brand;
+  }
+}
+
+// mimics a dashboard widget
+.customWidgetPreview {
+  height: 420px;
+  overflow: auto;
+  border: 1px solid @theme-color-border;
+  border-radius: .5rem;
+  background: @theme-color-background-base;
+
+  &__header {
+    position: sticky;
+    top: 0;
+    padding: .625rem 1rem;
+    border-bottom: 1px solid @theme-color-border;
+    background: @theme-color-background-tinyContrast;
+    color: @theme-color-text;
+    font-weight: 500;
+  }
+
+  &__content {
+    padding: 1rem;
   }
 }

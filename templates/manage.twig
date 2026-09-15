@@ -1,0 +1,7 @@
+{% extends 'admin.twig' %}
+
+{% set title = 'CustomWidgets_CustomWidgets'|translate %}
+
+{% block content %}
+    <div vue-entry="CoreHome.ClientWidgetRenderer" widget="{{ widget|json_encode }}"></div>
+{% endblock %}
