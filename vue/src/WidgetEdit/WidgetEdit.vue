@@ -44,77 +44,97 @@
           <div class="customWidgetEdit__pane">
             <h3 class="customWidgetEdit__heading">{{ translate('CustomWidgets_Preview') }}</h3>
             <div class="customWidgetPreview">
-              <div class="customWidgetPreview__header">
-                {{ widget.title.trim() || translate('CustomWidgets_UntitledWidget') }}
+              <div class="widget default">
+                <div class="widgetTop">
+                  <ReportHeader
+                    context="preview"
+                    :report-title="widget.title.trim() || translate('CustomWidgets_UntitledWidget')"
+                  />
+                </div>
+                <div class="widgetContent">
+                  <div
+                    ref="previewBody"
+                    class="widgetBody custom-widget-body"
+                  />
+                </div>
               </div>
-              <div
-                class="customWidgetPreview__content widgetBody custom-widget-body"
-                v-html="widget.content"
-              />
             </div>
-            <p class="customWidgetEdit__help">{{ translate('CustomWidgets_PreviewScriptsNotice') }}</p>
           </div>
         </div>
 
         <div class="customWidgetEdit__sites">
-          <h3 class="customWidgetEdit__heading">{{ translate('CustomWidgets_DisplayOn') }}</h3>
-          <p>
-            <label>
-              <input
-                type="radio"
-                name="customWidgetScope"
-                :checked="!specificSites"
-                @change="specificSites = false"
+          <h3 class="customWidgetEdit__heading">{{ translate('CustomWidgets_ApplyTo') }}</h3>
+          <div class="customWidgetEdit__siteSelector">
+            <label
+              for="customWidgetSite"
+              class="siteSelectorLabel"
+            >{{ translate('General_Website') }}</label>
+            <div class="sites_autocomplete">
+              <SiteSelector
+                id="customWidgetSite"
+                :model-value="site"
+                @update:model-value="onSiteSelected($event)"
+                :show-all-sites-item="true"
+                :all-sites-text="translate('CustomWidgets_AllWebsites')"
+                all-sites-location="top"
+                :switch-site-on-select="false"
+                :show-selected-site="true"
               />
-              <span>{{ translate('CustomWidgets_AllWebsites') }}</span>
-            </label>
-          </p>
-          <p>
-            <label>
-              <input
-                type="radio"
-                name="customWidgetScope"
-                :checked="specificSites"
-                @change="specificSites = true"
-              />
-              <span>{{ translate('CustomWidgets_SpecificWebsites') }}</span>
-            </label>
-          </p>
+            </div>
+          </div>
 
           <div
-            v-if="specificSites"
+            v-if="!isAllWebsites"
             class="customWidgetEdit__siteSelection"
           >
-            <input
-              v-model="siteSearch"
-              type="text"
-              class="customWidgetEdit__siteSearch"
-              :placeholder="translate('CustomWidgets_SearchWebsites')"
-            />
-            <div class="customWidgetEdit__siteList">
-              <p
-                v-for="site in filteredSites"
-                :key="site.idsite"
-              >
-                <label>
-                  <input
-                    type="checkbox"
-                    :checked="widget.idSites.includes(site.idsite)"
-                    @change="toggleSite(site.idsite)"
-                  />
-                  <span>{{ site.name }} <small>#{{ site.idsite }}</small></span>
-                </label>
-              </p>
-              <p
-                v-if="!filteredSites.length"
-                class="customWidgetEdit__help"
-              >{{ translate('CustomWidgets_NoWebsiteFound') }}</p>
+            <label for="customWidgetSiteSearch">
+              {{ translate('CustomWidgets_SelectWebsitesMatchingSearch') }}
+            </label>
+            <div class="customWidgetEdit__siteSearch">
+              <input
+                id="customWidgetSiteSearch"
+                v-model="siteSearch"
+                type="text"
+                class="control_text"
+                :placeholder="translate('General_Search')"
+                @keydown.enter.prevent="addSitesMatching(siteSearch)"
+              />
+              <input
+                type="button"
+                class="btn"
+                :disabled="!siteSearch.trim()"
+                :value="translate('CustomWidgets_FindWebsites')"
+                @click="addSitesMatching(siteSearch)"
+              />
             </div>
-            <p class="customWidgetEdit__help">
-              {{ widget.idSites.length
-                ? translate('CustomWidgets_SelectedWebsites', String(widget.idSites.length))
-                : translate('CustomWidgets_NoWebsiteSelected') }}
-            </p>
+
+            <table class="entityTable">
+              <thead>
+                <tr>
+                  <th class="siteId">{{ translate('General_Id') }}</th>
+                  <th class="siteName">{{ translate('General_Name') }}</th>
+                  <th class="siteAction">{{ translate('General_Remove') }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  v-for="selectedSite in selectedSites"
+                  :key="selectedSite.idsite"
+                >
+                  <td>{{ selectedSite.idsite }}</td>
+                  <td>{{ selectedSite.name }}</td>
+                  <td class="siteAction entityTable_ActionCell">
+                    <button
+                      v-if="selectedSites.length > 1"
+                      type="button"
+                      class="table-action icon-minus"
+                      :title="translate('General_Remove')"
+                      @click="removeSite(selectedSite.idsite)"
+                    />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
 
@@ -141,19 +161,34 @@ import {
   MatomoLoader,
   MatomoUrl,
   NotificationsStore,
+  ReportHeader,
+  SiteSelector,
   translate,
 } from 'CoreHome';
+import type { SiteRef } from 'CoreHome';
 import { Field, SaveButton } from 'CorePluginsAdmin';
 import HtmlCodeEditor from '../HtmlCodeEditor/HtmlCodeEditor.vue';
+import formatContent from './formatContent';
 import CustomWidgetsStore from '../CustomWidgets.store';
-import type { CustomWidget } from '../types';
+import type { CustomWidget, SiteOption } from '../types';
+
+const ALL_WEBSITES = 'all';
+
+// scripts of the content run in the preview: wait for the end of the typing to not run half written code
+const PREVIEW_DELAY = 600;
+
+let previewTimeout: ReturnType<typeof setTimeout> | undefined;
 
 export interface WidgetEditState {
   widget: CustomWidget;
-  specificSites: boolean;
+  site: SiteRef;
   siteSearch: string;
   isLoading: boolean;
   notFound: boolean;
+}
+
+function allWebsites(): SiteRef {
+  return { id: ALL_WEBSITES, name: translate('CustomWidgets_AllWebsites') };
 }
 
 export default defineComponent({
@@ -163,7 +198,9 @@ export default defineComponent({
     Field,
     HtmlCodeEditor,
     MatomoLoader,
+    ReportHeader,
     SaveButton,
+    SiteSelector,
   },
   props: {
     // 0 to create a widget
@@ -180,7 +217,7 @@ export default defineComponent({
         content: '',
         idSites: [],
       },
-      specificSites: false,
+      site: allWebsites(),
       siteSearch: '',
       isLoading: false,
       notFound: false,
@@ -192,14 +229,36 @@ export default defineComponent({
     }
 
     this.isLoading = true;
-    CustomWidgetsStore.fetchWidget(this.idWidget).then((widget) => {
+    Promise.all([
+      CustomWidgetsStore.fetchWidget(this.idWidget),
+      CustomWidgetsStore.fetchSites(),
+    ]).then(([widget]) => {
       this.widget = widget;
-      this.specificSites = widget.idSites.length > 0;
+      if (widget.idSites.length) {
+        this.site = this.toSiteRef(widget.idSites[0]);
+      }
     }).catch(() => {
       this.notFound = true;
     }).finally(() => {
       this.isLoading = false;
     });
+  },
+  watch: {
+    'widget.content': function onContentChange() {
+      clearTimeout(previewTimeout);
+      previewTimeout = setTimeout(() => this.renderPreview(), PREVIEW_DELAY);
+    },
+    isLoading(isLoading: boolean) {
+      if (!isLoading) {
+        this.$nextTick(() => this.renderPreview());
+      }
+    },
+  },
+  mounted() {
+    this.renderPreview();
+  },
+  beforeUnmount() {
+    clearTimeout(previewTimeout);
   },
   computed: {
     contentTitle(): string {
@@ -211,29 +270,82 @@ export default defineComponent({
     isUpdating(): boolean {
       return CustomWidgetsStore.isUpdating.value;
     },
-    filteredSites() {
-      const search = this.siteSearch.trim().toLowerCase();
-      const sites = CustomWidgetsStore.sites.value;
-      if (!search) {
-        return sites;
-      }
-      return sites.filter((site) => site.name.toLowerCase().includes(search)
-        || String(site.idsite) === search);
+    isAllWebsites(): boolean {
+      return `${this.site.id}` === ALL_WEBSITES;
+    },
+    selectedSites(): SiteOption[] {
+      const names = CustomWidgetsStore.siteNames.value;
+      return this.widget.idSites.map((idsite) => ({
+        idsite,
+        name: names[idsite] ?? `#${idsite}`,
+      }));
     },
   },
   methods: {
-    toggleSite(idSite: number) {
-      const position = this.widget.idSites.indexOf(idSite);
-      if (position === -1) {
+    renderPreview() {
+      const previewBody = this.$refs.previewBody as HTMLElement | undefined;
+      if (previewBody) {
+        // jQuery executes the scripts, like the dashboards rendering the widget
+        window.$(previewBody).html(formatContent(this.widget.content));
+      }
+    },
+    toSiteRef(idSite: number): SiteRef {
+      return {
+        id: idSite,
+        name: CustomWidgetsStore.siteNames.value[idSite] ?? `#${idSite}`,
+      };
+    },
+    onSiteSelected(site: SiteRef) {
+      this.site = site;
+      if (this.isAllWebsites) {
+        this.widget.idSites = [];
+        return;
+      }
+      this.addSite(Number(site.id));
+    },
+    addSite(idSite: number) {
+      if (!this.widget.idSites.includes(idSite)) {
         this.widget.idSites.push(idSite);
-      } else {
-        this.widget.idSites.splice(position, 1);
+      }
+    },
+    removeSite(idSite: number) {
+      if (this.widget.idSites.length <= 1) {
+        return;
+      }
+
+      this.widget.idSites = this.widget.idSites.filter((id) => id !== idSite);
+      if (Number(this.site.id) === idSite) {
+        this.site = this.toSiteRef(this.widget.idSites[0]);
+      }
+    },
+    addSitesMatching(searchTerm: string) {
+      const search = searchTerm.trim().toLowerCase();
+      if (!search) {
+        return;
+      }
+
+      const matching = CustomWidgetsStore.sites.value.filter(
+        (site) => site.name.toLowerCase().includes(search) || String(site.idsite) === search,
+      );
+      const added = matching.filter((site) => !this.widget.idSites.includes(site.idsite));
+      added.forEach((site) => this.addSite(site.idsite));
+
+      NotificationsStore.show({
+        message: matching.length
+          ? translate('CustomWidgets_WebsitesAdded', String(added.length), `"${searchTerm.trim()}"`)
+          : translate('CustomWidgets_NoWebsiteMatching', `"${searchTerm.trim()}"`),
+        context: matching.length ? 'success' : 'warning',
+        id: 'customWidgetsSiteSearch',
+        type: 'transient',
+      });
+      if (matching.length) {
+        this.siteSearch = '';
       }
     },
     save() {
       const widget: CustomWidget = {
         ...this.widget,
-        idSites: this.specificSites ? [...this.widget.idSites] : [],
+        idSites: this.isAllWebsites ? [] : [...this.widget.idSites],
       };
 
       CustomWidgetsStore.saveWidget(widget).then(() => {

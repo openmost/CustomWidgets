@@ -18,8 +18,12 @@ class CustomWidgets extends \Piwik\Plugin
     public function registerEvents()
     {
         return [
+            'Template.afterEventsReport' => 'renderOpenmostCommunicationAfterEvents',
+            'Widget.filterWidgets' => 'addOpenmostCommunicationWidgets',
+            'Template.beforeContent' => 'renderOpenmostCommunication',
             'AssetManager.getStylesheetFiles' => 'getStylesheetFiles',
             'Widget.addWidgetConfigs' => 'addWidgetConfigs',
+            'API.API.getWidgetMetadata.end' => 'sortWidgetMetadata',
             'Translate.getClientSideTranslationKeys' => 'getClientSideTranslationKeys',
         ];
     }
@@ -46,7 +50,7 @@ class CustomWidgets extends \Piwik\Plugin
     {
         $idSite = Common::getRequestVar('idSite', 0, 'int');
 
-        foreach (WidgetDefinitions::getWidgets() as $position => $widget) {
+        foreach (WidgetDefinitions::getWidgets() as $widget) {
             if ($idSite > 0 && !WidgetDefinitions::isAvailableForSite($widget, $idSite)) {
                 continue;
             }
@@ -57,15 +61,47 @@ class CustomWidgets extends \Piwik\Plugin
             $config->setAction('getCustomWidget');
             $config->setParameters(['idWidget' => $widget['id']]);
             $config->setName($widget['title']);
-            $config->setOrder(100 + $position);
             $config->setIsWidgetizable();
             $configs[] = $config;
+        }
+    }
+
+    /**
+     * Core sorts the widgets of a category by unique id, which would list "Widget 10" before "Widget 2",
+     * so the custom widgets are sorted by title in the slots they already occupy
+     */
+    public function sortWidgetMetadata(&$widgets): void
+    {
+        if (!is_array($widgets)) {
+            return;
+        }
+
+        $slots = [];
+        $customWidgets = [];
+        foreach ($widgets as $index => $widget) {
+            if (($widget['module'] ?? null) === 'CustomWidgets') {
+                $slots[] = $index;
+                $customWidgets[] = $widget;
+            }
+        }
+
+        usort($customWidgets, static function (array $a, array $b): int {
+            return strnatcasecmp((string) $a['name'], (string) $b['name']);
+        });
+
+        foreach ($slots as $position => $index) {
+            $widgets[$index] = $customWidgets[$position];
         }
     }
 
     public function getClientSideTranslationKeys(&$translationKeys)
     {
         $translationKeys[] = 'CustomWidgets_AllWebsites';
+        $translationKeys[] = 'CustomWidgets_ApplyTo';
+        $translationKeys[] = 'CustomWidgets_FindWebsites';
+        $translationKeys[] = 'CustomWidgets_NoWebsiteMatching';
+        $translationKeys[] = 'CustomWidgets_SelectWebsitesMatchingSearch';
+        $translationKeys[] = 'CustomWidgets_WebsitesAdded';
         $translationKeys[] = 'CustomWidgets_AllowedDomainsDescription';
         $translationKeys[] = 'CustomWidgets_AllowedDomainsSaved';
         $translationKeys[] = 'CustomWidgets_AllowedDomainsTitle';
@@ -76,16 +112,8 @@ class CustomWidgets extends \Piwik\Plugin
         $translationKeys[] = 'CustomWidgets_DomainsOnePerLine';
         $translationKeys[] = 'CustomWidgets_EditWidget';
         $translationKeys[] = 'CustomWidgets_ManageIntro';
-        $translationKeys[] = 'CustomWidgets_MoveDown';
-        $translationKeys[] = 'CustomWidgets_MoveUp';
-        $translationKeys[] = 'CustomWidgets_NoWebsiteFound';
-        $translationKeys[] = 'CustomWidgets_NoWebsiteSelected';
         $translationKeys[] = 'CustomWidgets_NoWidgets';
         $translationKeys[] = 'CustomWidgets_Preview';
-        $translationKeys[] = 'CustomWidgets_PreviewScriptsNotice';
-        $translationKeys[] = 'CustomWidgets_SearchWebsites';
-        $translationKeys[] = 'CustomWidgets_SelectedWebsites';
-        $translationKeys[] = 'CustomWidgets_SpecificWebsites';
         $translationKeys[] = 'CustomWidgets_UntitledWidget';
         $translationKeys[] = 'CustomWidgets_WidgetContent';
         $translationKeys[] = 'CustomWidgets_WidgetContentHelp';
@@ -103,9 +131,28 @@ class CustomWidgets extends \Piwik\Plugin
         $translationKeys[] = 'General_Edit';
         $translationKeys[] = 'General_Id';
         $translationKeys[] = 'General_LoadingData';
+        $translationKeys[] = 'General_Name';
+        $translationKeys[] = 'General_Remove';
+        $translationKeys[] = 'General_Search';
+        $translationKeys[] = 'General_Website';
         $translationKeys[] = 'General_Save';
         $translationKeys[] = 'General_Update';
         $translationKeys[] = 'General_Yes';
         $translationKeys[] = 'General_No';
+    }
+
+    public function renderOpenmostCommunication(&$out, $layout, $module = '', $action = '')
+    {
+        OpenmostCommunication::beforeContent($out, (string) $layout, (string) $module, (string) $action, $this->getPluginName());
+    }
+
+    public function addOpenmostCommunicationWidgets($list)
+    {
+        OpenmostCommunication::filterWidgets($list, $this->getPluginName());
+    }
+
+    public function renderOpenmostCommunicationAfterEvents(&$out, $dataTable = null)
+    {
+        OpenmostCommunication::afterEventsReport($out, $this->getPluginName());
     }
 }

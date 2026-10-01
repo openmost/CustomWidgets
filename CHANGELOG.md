@@ -1,5 +1,16 @@
 ## Changelog
 
+### 6.1.0
+
+- "Apply to" website selector, like Custom Reports: all websites, one or more websites, or every website matching a search
+- The widget preview uses the dashboard widget design and runs the scripts of the content, like the dashboards
+- Plain text content (without HTML blocks) is displayed as paragraphs
+- Custom widgets are sorted alphabetically in the dashboard widget selector
+- Remove the widget reordering (move up / move down buttons and `CustomWidgets.reorderWidgets` API), it had no effect on the widget selector
+- The code editor uses a light and dark palette that follows the Matomo theme
+- Interface translated into 12 languages
+- Shorter Marketplace description that fits the plugin cards, and campaign parameters on the Openmost links of the README.
+
 ### 6.0.0
 
 - Compatibility with Matomo 6.x (`>=6.0.0-b1,<7.0.0-b1`)

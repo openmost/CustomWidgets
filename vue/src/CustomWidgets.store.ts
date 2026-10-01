@@ -144,23 +144,6 @@ class CustomWidgetsStore {
     ).then(() => this.fetchWidgets()));
   }
 
-  moveWidget(index: number, offset: number): Promise<void> {
-    const target = index + offset;
-    const widgets = [...this.privateState.widgets];
-    if (target < 0 || target >= widgets.length) {
-      return Promise.resolve();
-    }
-
-    const [widget] = widgets.splice(index, 1);
-    widgets.splice(target, 0, widget);
-    this.privateState.widgets = widgets;
-
-    return this.update(AjaxHelper.post(
-      { method: 'CustomWidgets.reorderWidgets' },
-      { idWidgets: widgets.map((item) => item.id) },
-    ).then(() => undefined));
-  }
-
   saveAllowedDomains(domains: string[]): Promise<void> {
     return this.update(AjaxHelper.post<string[]>(
       { method: 'CustomWidgets.setAllowedDomains' },

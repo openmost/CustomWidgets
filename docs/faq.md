@@ -16,7 +16,7 @@ Only super users can manage the widgets, from __Administration > System > Custom
 __Who can see a widget ?__
 
 All users having at least a view access to a website can display the widgets available for this website.
-Choose __Specific websites__ when editing a widget to display it only on some websites.
+In __Apply to__, pick a website instead of __All websites__ to display the widget only on some websites. Each website you pick is added to the list, and __Add matching websites__ adds every website whose name contains the search.
 
 __Where are the settings of version 1.x ?__
 
@@ -26,18 +26,22 @@ __Why is my iframe, image or video not displayed ?__
 
 Content loaded from another domain is blocked by the Matomo Content Security Policy. Add the domain in the __Allowed external domains__ section of the Custom Widgets page, then reload the dashboard.
 
-__Why does my script not run in the preview ?__
+__When do the scripts run in the preview ?__
 
-For safety, scripts are not executed in the preview. They run when the widget is displayed on a dashboard.
+Scripts run in the preview like on a dashboard, once you stop typing in the code editor. They are run again after each change, so a script adding event listeners or timers adds them again: reload the page to start from a clean state.
+
+__Do I need to write HTML ?__
+
+No. Text written without HTML blocks (paragraphs, lists, tables, iframes...) is displayed as paragraphs: a blank line starts a new paragraph and a line break is kept.
 
 __Is the content of the widgets filtered ?__
 
 No, the HTML is displayed as it is written, so only add content you trust.
 
-__How can I contribute to this plugin ?__
+__How can I contribute to this plugin?__
 
-You can help me develop this plugin by contacting me. You can also create the project and request an integration. Any way you consider legitimate to contribute is welcome.
+Open an issue or a pull request on [GitHub](https://github.com/openmost/CustomWidgets), or contact us at ronan@openmost.com.
 
-__How long this plugin will be maintained ?__
+__How long will this plugin be maintained?__
 
-As long as possible, I have many project to maintain, I'm the first user of this plugin and I use Matomo on many project, if I see errors, I'll patch this plugin faster as possible !
+As long as possible. We use Matomo and this plugin on many projects every day, so issues are fixed as fast as possible.

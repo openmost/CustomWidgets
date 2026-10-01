@@ -38,7 +38,7 @@
           </tr>
           <template v-else>
             <tr
-              v-for="(widget, index) in widgets"
+              v-for="widget in widgets"
               :key="widget.id"
               :class="`customWidget customWidget-${widget.id}`"
             >
@@ -56,21 +56,7 @@
                   :title="siteList(widget)"
                 >{{ sitesSummary(widget) }}</span>
               </td>
-              <td class="action">
-                <button
-                  type="button"
-                  class="table-action icon-arrow-top"
-                  :disabled="index === 0 || isUpdating"
-                  :title="translate('CustomWidgets_MoveUp')"
-                  @click="move(index, -1)"
-                />
-                <button
-                  type="button"
-                  class="table-action icon-arrow-bottom"
-                  :disabled="index === widgets.length - 1 || isUpdating"
-                  :title="translate('CustomWidgets_MoveDown')"
-                  @click="move(index, 1)"
-                />
+              <td class="action entityTable_ActionCell">
                 <a
                   class="table-action icon-edit"
                   :href="`#?idWidget=${widget.id}`"
@@ -182,9 +168,6 @@ export default defineComponent({
         return names.join(', ');
       }
       return `${names.slice(0, MAX_SITES_IN_SUMMARY).join(', ')} +${names.length - MAX_SITES_IN_SUMMARY}`;
-    },
-    move(index: number, offset: number) {
-      CustomWidgetsStore.moveWidget(index, offset);
     },
     deleteWidget(widget: ListedWidget) {
       this.widgetToDelete = widget;

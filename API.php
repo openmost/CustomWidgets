@@ -22,7 +22,7 @@ use Piwik\Piwik;
 class API extends \Piwik\Plugin\API
 {
     /**
-     * Returns all the custom widgets, in their display order.
+     * Returns all the custom widgets.
      *
      * @return array<int, array{id: int, title: string, content: string, idSites: int[]}>
      */
@@ -93,18 +93,6 @@ class API extends \Piwik\Plugin\API
         Piwik::checkUserHasSuperUserAccess();
 
         WidgetDefinitions::deleteWidget($idWidget);
-    }
-
-    /**
-     * Changes the display order of the custom widgets.
-     *
-     * @param int[]|string $idWidgets Widget ids in the new order, array or comma separated list.
-     */
-    public function reorderWidgets($idWidgets): void
-    {
-        Piwik::checkUserHasSuperUserAccess();
-
-        WidgetDefinitions::reorderWidgets(WidgetDefinitions::toIdList($idWidgets));
     }
 
     /**

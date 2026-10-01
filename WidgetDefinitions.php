@@ -49,6 +49,13 @@ class WidgetDefinitions
 
     public const TITLE_MAX_LENGTH = 255;
 
+    /**
+     * Keep both patterns in sync with vue/src/WidgetEdit/formatContent.ts (preview)
+     */
+    private const INVISIBLE_ELEMENTS_PATTERN = '~<(script|style|template)\b.*?</\1\s*>~is';
+
+    private const BLOCK_TAG_PATTERN = '~<(address|article|aside|audio|blockquote|canvas|details|div|dl|fieldset|figure|footer|form|h[1-6]|header|hr|iframe|main|nav|ol|p|pre|section|svg|table|ul|video)[\s>/]~i';
+
     public static function getDefaultWidgets(): array
     {
         return [
@@ -130,21 +137,6 @@ class WidgetDefinitions
     {
         $widgets = self::getWidgets();
         array_splice($widgets, self::getIndex($widgets, $idWidget), 1);
-        self::saveWidgets($widgets);
-    }
-
-    /**
-     * @param int[] $idWidgets widget ids in the new order, widgets not listed keep their relative order at the end
-     */
-    public static function reorderWidgets(array $idWidgets): void
-    {
-        $positions = array_flip(array_values($idWidgets));
-        $widgets = self::getWidgets();
-
-        usort($widgets, static function (array $a, array $b) use ($positions) {
-            return ($positions[$a['id']] ?? PHP_INT_MAX) <=> ($positions[$b['id']] ?? PHP_INT_MAX);
-        });
-
         self::saveWidgets($widgets);
     }
 
@@ -262,6 +254,25 @@ class WidgetDefinitions
         }
 
         return $lastId;
+    }
+
+    /**
+     * Text written without block elements is wrapped in paragraphs (a blank line starts a new one, a line break becomes
+     * <br>), so it gets the paragraph spacing of the widgets instead of sticking to the bottom edge
+     */
+    public static function formatContent(string $content): string
+    {
+        $content = trim($content);
+        $visibleText = trim(strip_tags((string) preg_replace(self::INVISIBLE_ELEMENTS_PATTERN, '', $content)));
+        if ($visibleText === '' || preg_match(self::BLOCK_TAG_PATTERN, $content)) {
+            return $content;
+        }
+
+        $paragraphs = preg_split('~\R\s*\R~u', $content) ?: [$content];
+
+        return implode('', array_map(static function (string $paragraph): string {
+            return '<p>' . preg_replace('~\R~u', '<br>', trim($paragraph)) . '</p>';
+        }, $paragraphs));
     }
 
     private static function getString(array $widget, string $key): string

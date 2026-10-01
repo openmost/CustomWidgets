@@ -51,7 +51,7 @@ class Controller extends \Piwik\Plugin\Controller
         if (null === $widget || !WidgetDefinitions::isAvailableForSite($widget, (int) $this->idSite)) {
             $content = '<p class="custom-widget-unavailable">' . Piwik::translate('CustomWidgets_WidgetNotAvailable') . '</p>';
         } else {
-            $content = $widget['content'];
+            $content = WidgetDefinitions::formatContent($widget['content']);
         }
 
         return '<div class="widgetBody custom-widget-body">' . $content . '</div>';

@@ -23,8 +23,10 @@ import {
 import { basicSetup, EditorView } from 'codemirror';
 import { EditorState } from '@codemirror/state';
 import { tooltips } from '@codemirror/view';
+import { HighlightStyle, syntaxHighlighting } from '@codemirror/language';
 import { html } from '@codemirror/lang-html';
-import { oneDark } from '@codemirror/theme-one-dark';
+import { tags } from '@lezer/highlight';
+import { createCodeTheme } from '../codeTheme';
 
 /**
  * CodeMirror editor highlighting HTML with its inline JavaScript and CSS, bound with v-model.
@@ -50,7 +52,9 @@ export default defineComponent({
           extensions: [
             basicSetup,
             html(),
-            oneDark,
+            createCodeTheme({
+              EditorView, HighlightStyle, syntaxHighlighting, tags,
+            }),
             EditorView.lineWrapping,
             // the editor clips its overflow (rounded corners): render autocomplete tooltips in the body
             tooltips({ parent: document.body }),

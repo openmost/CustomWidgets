@@ -6,11 +6,11 @@ Share internal news, useful links, videos, iframes or any content with your team
 ### Create a widget
 
 1. Go to __Administration > System > Custom Widgets__.
-2. Click on __Create a widget__, then enter a title and the content of the widget (text and HTML). The preview next to the code editor shows how the widget will look.
-3. Choose where the widget is displayed: __All websites__ or __Specific websites__.
+2. Click on __Create a widget__, then enter a title and the content of the widget (text and HTML). The preview next to the code editor shows the widget as it looks on a dashboard.
+3. In __Apply to__, keep __All websites__ or pick one or more websites (one at a time, or all websites matching a search).
 4. Click on __Create__.
 
-The list of widgets lets you edit, reorder or delete your widgets.
+The list of widgets lets you edit or delete your widgets. In the dashboard widget selector, the custom widgets are listed in alphabetical order.
 
 ### Add a widget to a dashboard
 
@@ -35,11 +35,11 @@ YouTube domains are allowed by default, so you can embed a video right away:
 
 ### Scripts
 
-Scripts included in the content are executed when the widget is displayed on a dashboard. They are not executed in the preview.
+Scripts included in the content are executed when the widget is displayed on a dashboard, and in the preview once you stop typing.
 
 ### HTTP API
 
-Super users can also manage the widgets with the HTTP API: `CustomWidgets.getWidgets`, `CustomWidgets.getWidget`, `CustomWidgets.addWidget`, `CustomWidgets.updateWidget`, `CustomWidgets.deleteWidget`, `CustomWidgets.reorderWidgets`, `CustomWidgets.getAllowedDomains` and `CustomWidgets.setAllowedDomains`.
+Super users can also manage the widgets with the HTTP API: `CustomWidgets.getWidgets`, `CustomWidgets.getWidget`, `CustomWidgets.addWidget`, `CustomWidgets.updateWidget`, `CustomWidgets.deleteWidget`, `CustomWidgets.getAllowedDomains` and `CustomWidgets.setAllowedDomains`.
 
 ### Upgrade from version 1.x
 

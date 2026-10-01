@@ -1,3 +1,5 @@
+@import "codeTheme.less";
+
 // Widget content, rendered on the dashboards and in the preview of the management page
 .custom-widget-body {
   overflow: hidden;
@@ -14,7 +16,7 @@
   }
 
   .custom-widget-unavailable {
-    color: @theme-color-text-lighter;
+    color: var(--theme-color-text-lighter);
     font-style: italic;
   }
 }
@@ -42,30 +44,18 @@
   }
 
   td.title a {
-    color: @theme-color-link;
+    color: var(--theme-color-link);
     font-weight: 500;
   }
 
-  button.table-action {
-    padding: 0 4px;
-    border: 0;
-    background: none;
-    color: @theme-color-text;
-    font-size: 16px;
-    cursor: pointer;
-
-    &[disabled] {
-      opacity: .3;
-      cursor: default;
-    }
-  }
-
-  a.table-action {
-    color: @theme-color-text;
+  // core only styles the `data-state="disabled"` variant, mirror it for the native attribute
+  .table-action[disabled] {
+    opacity: .2;
+    cursor: not-allowed;
   }
 
   &__allSites {
-    color: @theme-color-text-light;
+    color: var(--theme-color-text-light);
   }
 }
 
@@ -80,17 +70,21 @@
   }
 }
 
+// beats the core `.card .card-content p` reset, which drops the spacing below the code editor and the preview
+.card .card-content p.customWidgetEdit__help {
+  margin: .75rem 0 0;
+}
+
 .customWidgetEdit {
   &__heading {
     margin: 1.5rem 0 .75rem;
-    color: @theme-color-text;
+    color: var(--theme-color-text);
     font-size: 1rem;
     font-weight: 500;
   }
 
   &__help {
-    margin: .5rem 0 0;
-    color: @theme-color-text-lighter;
+    color: var(--theme-color-text-lighter);
     font-size: .8rem;
   }
 
@@ -108,28 +102,38 @@
     min-width: 0;
   }
 
-  &__sites p {
-    margin: .25rem 0;
+  &__siteSelector {
+    max-width: 600px;
   }
 
   &__siteSelection {
     max-width: 600px;
-    margin: .5rem 0 0 1.75rem;
+    margin-top: 1rem;
+
+    .entityTable {
+      margin-top: 1rem;
+    }
+
+    th.siteId {
+      width: 80px;
+    }
+
+    th.siteAction,
+    td.siteAction {
+      width: 80px;
+      text-align: center;
+    }
   }
 
   &__siteSearch {
-    margin-bottom: .5rem !important;
-  }
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    margin-top: .25rem;
 
-  &__siteList {
-    max-height: 260px;
-    overflow: auto;
-    padding: .25rem .75rem;
-    border: 1px solid @theme-color-border;
-    border-radius: .5rem;
-
-    small {
-      color: @theme-color-text-lighter;
+    input[type=text] {
+      flex: 1 1 auto;
+      margin: 0;
     }
   }
 
@@ -147,34 +151,19 @@
   overflow: hidden;
   font-size: .875rem;
 
-  .cm-scroller {
-    font-family: monospace;
-  }
-
   &.cm-focused {
-    outline: 2px solid @theme-color-brand;
+    outline: 2px solid var(--theme-color-brand);
   }
 }
 
-// mimics a dashboard widget
+// Reuses the dashboard widget markup (Dashboard/stylesheets/widget.less) on the page background of the dashboards,
+// so the widget card stands out like on a dashboard
 .customWidgetPreview {
+  box-sizing: border-box;
+  // same height as the code editor next to it (.customWidgetsCodeEditor .cm-editor)
   height: 420px;
   overflow: auto;
-  border: 1px solid @theme-color-border;
+  padding: 1.5rem;
   border-radius: .5rem;
-  background: @theme-color-background-base;
-
-  &__header {
-    position: sticky;
-    top: 0;
-    padding: .625rem 1rem;
-    border-bottom: 1px solid @theme-color-border;
-    background: @theme-color-background-tinyContrast;
-    color: @theme-color-text;
-    font-weight: 500;
-  }
-
-  &__content {
-    padding: 1rem;
-  }
+  background: var(--theme-color-background-base);
 }
