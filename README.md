@@ -15,7 +15,7 @@ The Matomo 6 version of the plugin adds unlimited widgets, a dedicated managemen
 
 ## Requirements
 
-- Matomo 5.0.0 or higher, below 6.0.0
+- Matomo 5.10.0 or higher, below 6.0.0
 
 ## Installation / Configuration
 
