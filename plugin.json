@@ -1,7 +1,7 @@
 {
     "name": "CustomWidgets",
-    "description": "Add custom text and HTML to your dashboard",
-    "version": "1.0.4",
+    "description": "Add a widget with your own content to dashboards: news, links, videos, iframes, images or any HTML.",
+    "version": "5.0.0",
     "theme": false,
     "require": {
         "matomo": ">=5.0.0,<6.0.0-b1"
@@ -9,16 +9,19 @@
     "authors": [
         {
             "name": "Openmost",
-            "email": "ronan@openmost.io",
-            "homepage": "https:\/\/openmost.io"
+            "email": "ronan@openmost.com",
+            "homepage": "https://openmost.com"
         }
     ],
     "support": {
-        "email": "ronan@openmost.io",
-        "issues": "https:\/\/github.com\/openmost\/CustomWidgets\/issues",
-        "source": "https:\/\/github.com\/openmost\/CustomWidgets"
+        "email": "ronan@openmost.com",
+        "issues": "https://github.com/openmost/CustomWidgets/issues",
+        "source": "https://github.com/openmost/CustomWidgets"
     },
-    "homepage": "https:\/\/openmost.io\/products\/custom-widgets\/",
+    "homepage": "https://openmost.com/matomo/extensions/custom-widgets",
+    "preview": {
+        "video_url": "https://www.youtube-nocookie.com/embed/4EYuO3xsH2U"
+    },
     "license": "GPL v3+",
     "keywords": [
         "custom",
