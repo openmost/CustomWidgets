@@ -10,6 +10,7 @@
 - The code editor uses a light and dark palette that follows the Matomo theme
 - Interface translated into 12 languages
 - Shorter Marketplace description that fits the plugin cards, and campaign parameters on the Openmost links of the README.
+- README: the plugin description now shows in the Description tab of the Matomo Marketplace.
 
 ### 6.0.0
 

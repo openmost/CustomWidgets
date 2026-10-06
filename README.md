@@ -1,8 +1,10 @@
 # Matomo CustomWidgets Plugin
 
+## Description
+
 Add your own widgets to Matomo dashboards: team news, links to internal resources, embedded videos, iframes, images or any HTML content.
 
-## Features
+### Features
 
 - **Unlimited widgets**: super users create, edit and delete as many widgets as they need, each with its own title and content (text and HTML)
 - **Dedicated admin page**: widgets are managed in **Administration > System > Custom Widgets**
@@ -16,12 +18,12 @@ Add your own widgets to Matomo dashboards: team news, links to internal resource
 - Widgets can be embedded outside Matomo with the Widgetize feature
 - Interface translated into 12 languages
 
-## Requirements
+### Requirements
 
 - Matomo 6.0.0 or higher, below 7.0.0
 - PHP 8.1 or higher
 
-## Installation / Configuration
+### Installation / Configuration
 
 1. Install and activate the plugin from the Matomo Marketplace (**Administration > Platform > Marketplace**).
 2. Go to **Administration > System > Custom Widgets** and click **Create a widget**.
@@ -32,11 +34,11 @@ To embed content from another domain, add the domain in the **Allowed external d
 
 Upgrading from version 1.x: the widget configured in the General settings becomes the first widget of the list, and the dashboards displaying it keep working.
 
-## Privacy and data
+### Privacy and data
 
 Widgets and allowed domains are stored in the Matomo database. The plugin sends nothing outside your Matomo instance. The HTML content is displayed as written and is not filtered, so only add content and external domains you trust: embedded content from other domains is loaded by the browser of every user viewing the widget.
 
-## Need help with Matomo?
+### Need help with Matomo?
 
 Openmost is an official Matomo Implementation Partner. When you need widgets driven by your own data or business logic, we build [custom Matomo plugins](https://openmost.com/matomo/services/plugin-development?utm_source=matomo_marketplace&utm_medium=referral&utm_campaign=services&utm_content=customwidgets) from a written spec, tested on the Matomo versions you run and maintained over time.
 
