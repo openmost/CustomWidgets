@@ -11,8 +11,8 @@ declare(strict_types=1);
 
 namespace Piwik\Plugins\CustomWidgets;
 
-use Piwik\Common;
 use Piwik\Piwik;
+use Piwik\Request;
 
 class Controller extends \Piwik\Plugin\Controller
 {
@@ -45,7 +45,7 @@ class Controller extends \Piwik\Plugin\Controller
     {
         $this->checkSitePermission();
 
-        $idWidget = Common::getRequestVar('idWidget', WidgetDefinitions::LEGACY_WIDGET_ID, 'int');
+        $idWidget = Request::fromRequest()->getIntegerParameter('idWidget', WidgetDefinitions::LEGACY_WIDGET_ID);
         $widget = WidgetDefinitions::findWidget($idWidget);
 
         if (null === $widget || !WidgetDefinitions::isAvailableForSite($widget, (int) $this->idSite)) {

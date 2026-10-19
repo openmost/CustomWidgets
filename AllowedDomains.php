@@ -11,9 +11,9 @@ declare(strict_types=1);
 
 namespace Piwik\Plugins\CustomWidgets;
 
-use Piwik\Common;
 use Piwik\Option;
 use Piwik\Piwik;
+use Piwik\Request;
 use Piwik\View\SecurityPolicy;
 
 /**
@@ -66,7 +66,12 @@ class AllowedDomains
 
     public static function extendSecurityPolicy(SecurityPolicy $policy): void
     {
-        $module = Common::getRequestVar('module', 'CoreHome', 'string');
+        // An empty module is dispatched to CoreHome, like a missing one
+        $module = Request::fromRequest()->getStringParameter('module', 'CoreHome');
+        if ($module === '') {
+            $module = 'CoreHome';
+        }
+
         if (!in_array($module, self::MODULES, true)) {
             return;
         }

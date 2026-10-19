@@ -9,8 +9,8 @@
 
 namespace Piwik\Plugins\CustomWidgets;
 
-use Piwik\Common;
 use Piwik\Option;
+use Piwik\Request;
 use Piwik\Widget\WidgetConfig;
 
 class CustomWidgets extends \Piwik\Plugin
@@ -48,7 +48,7 @@ class CustomWidgets extends \Piwik\Plugin
 
     public function addWidgetConfigs(&$configs)
     {
-        $idSite = Common::getRequestVar('idSite', 0, 'int');
+        $idSite = Request::fromRequest()->getIntegerParameter('idSite', 0);
 
         foreach (WidgetDefinitions::getWidgets() as $widget) {
             if ($idSite > 0 && !WidgetDefinitions::isAvailableForSite($widget, $idSite)) {
