@@ -1,5 +1,9 @@
 ## Changelog
 
+### 6.1.1
+
+- Request parameters are read with `Piwik\Request` instead of the deprecated `Common::getRequestVar`, ready for the next Matomo versions.
+
 ### 6.1.0
 
 - "Apply to" website selector, like Custom Reports: all websites, one or more websites, or every website matching a search

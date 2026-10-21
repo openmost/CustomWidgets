@@ -1,7 +1,7 @@
 {
     "name": "CustomWidgets",
     "description": "Add your own widgets to Matomo dashboards: news, links, videos, iframes, images or any HTML content.",
-    "version": "6.1.0",
+    "version": "6.1.1",
     "theme": false,
     "require": {
         "php": ">=8.1.0",
